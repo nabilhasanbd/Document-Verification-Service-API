@@ -1,13 +1,13 @@
-package com.myapp.verificationService;
+package com.example.documentverification;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class VerificationServiceApplication {
+public class DocumentVerificationApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(VerificationServiceApplication.class, args);
+		SpringApplication.run(DocumentVerificationApplication.class, args);
 	}
 
 }

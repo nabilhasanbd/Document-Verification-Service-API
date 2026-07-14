@@ -1,10 +1,10 @@
-package com.myapp.verificationService;
+package com.example.documentverification;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class VerificationServiceApplicationTests {
+class DocumentVerificationApplicationTests {
 
 	@Test
 	void contextLoads() {
