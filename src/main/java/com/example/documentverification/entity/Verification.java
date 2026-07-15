@@ -37,6 +37,8 @@ public class Verification {
     @Column(length = 1000)
     private String remarks;
 
+    private Instant verifiedAt;
+
     @Column(nullable = false, updatable = false)
     private Instant createdAt;
 
