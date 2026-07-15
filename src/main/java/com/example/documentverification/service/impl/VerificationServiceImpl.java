@@ -4,6 +4,7 @@ import com.example.documentverification.client.ExternalVerificationClient;
 import com.example.documentverification.dto.ExternalVerificationRequest;
 import com.example.documentverification.dto.ExternalVerificationResult;
 import com.example.documentverification.dto.VerificationResponse;
+import com.example.documentverification.dto.VerificationStatusResponse;
 import com.example.documentverification.entity.Customer;
 import com.example.documentverification.entity.Document;
 import com.example.documentverification.entity.DocumentStatus;
@@ -17,9 +18,8 @@ import com.example.documentverification.repository.VerificationRepository;
 import com.example.documentverification.service.VerificationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.cache.Cache;
-import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,28 +32,24 @@ public class VerificationServiceImpl implements VerificationService {
 
     private static final Logger log = LoggerFactory.getLogger(VerificationServiceImpl.class);
 
-    private static final String VERIFICATIONS_CACHE = "verifications";
-
     private final CustomerRepository customerRepository;
     private final DocumentRepository documentRepository;
     private final VerificationRepository verificationRepository;
     private final ExternalVerificationClient externalVerificationClient;
-    private final ObjectProvider<CacheManager> cacheManagerProvider;
 
     public VerificationServiceImpl(CustomerRepository customerRepository,
                                    DocumentRepository documentRepository,
                                    VerificationRepository verificationRepository,
-                                   ExternalVerificationClient externalVerificationClient,
-                                   ObjectProvider<CacheManager> cacheManagerProvider) {
+                                   ExternalVerificationClient externalVerificationClient) {
         this.customerRepository = customerRepository;
         this.documentRepository = documentRepository;
         this.verificationRepository = verificationRepository;
         this.externalVerificationClient = externalVerificationClient;
-        this.cacheManagerProvider = cacheManagerProvider;
     }
 
     @Override
     @Transactional
+    @CacheEvict(value = "verificationStatus", key = "#customerId")
     public VerificationResponse verify(UUID customerId) {
         log.info("Starting verification for customer: {}", customerId);
 
@@ -95,7 +91,7 @@ public class VerificationServiceImpl implements VerificationService {
             verification.setVerifiedAt(Instant.now());
         }
         Verification saved = verificationRepository.save(verification);
-        log.info("Verification {} persisted with status: {} for document: {}",
+        log.info("Verification updated: {} persisted with status: {} for document: {}",
                 saved.getId(), saved.getStatus(), document.getId());
 
         if (completed) {
@@ -107,9 +103,32 @@ public class VerificationServiceImpl implements VerificationService {
                     document.getId());
         }
 
-        evictVerificationCache(customerId);
+        log.info("Cache evicted for customer: {} (value: verificationStatus)", customerId);
 
         return toResponse(saved);
+    }
+
+    @Override
+    @Cacheable(value = "verificationStatus", key = "#customerId")
+    @Transactional(readOnly = true)
+    public VerificationStatusResponse getVerificationStatus(UUID customerId) {
+        log.info("Cache miss - loading verification status from database for customer: {}", customerId);
+
+        if (!customerRepository.existsById(customerId)) {
+            log.warn("Customer not found with id: {}", customerId);
+            throw new ResourceNotFoundException("Customer", "id", customerId);
+        }
+
+        Verification verification = verificationRepository
+                .findFirstByCustomer_IdOrderByCreatedAtDesc(customerId)
+                .orElseThrow(() -> {
+                    log.warn("Verification not found for customer: {}", customerId);
+                    return new ResourceNotFoundException("Verification", "customerId", customerId);
+                });
+
+        log.info("Loaded verification status from database for customer: {} (status: {})",
+                customerId, verification.getStatus());
+        return toStatusResponse(verification);
     }
 
     private VerificationStatus mapVerificationStatus(String providerStatus) {
@@ -128,19 +147,6 @@ public class VerificationServiceImpl implements VerificationService {
         };
     }
 
-    private void evictVerificationCache(UUID customerId) {
-        CacheManager cacheManager = cacheManagerProvider.getIfAvailable();
-        if (cacheManager == null) {
-            log.debug("No CacheManager available - skipping cache eviction for customer: {}", customerId);
-            return;
-        }
-        Cache cache = cacheManager.getCache(VERIFICATIONS_CACHE);
-        if (cache != null) {
-            cache.evict(customerId);
-            log.info("Evicted verification cache entry for customer: {}", customerId);
-        }
-    }
-
     private VerificationResponse toResponse(Verification verification) {
         return new VerificationResponse(
                 verification.getId(),
@@ -151,5 +157,15 @@ public class VerificationServiceImpl implements VerificationService {
                 verification.getRemarks(),
                 verification.getVerifiedAt(),
                 verification.getCreatedAt());
+    }
+
+    private VerificationStatusResponse toStatusResponse(Verification verification) {
+        return new VerificationStatusResponse(
+                verification.getCustomer().getId(),
+                verification.getDocument().getId(),
+                verification.getStatus().name(),
+                verification.getProviderReference(),
+                verification.getRemarks(),
+                verification.getVerifiedAt());
     }
 }

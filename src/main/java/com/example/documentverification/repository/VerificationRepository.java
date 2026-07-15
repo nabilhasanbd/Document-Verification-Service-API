@@ -9,4 +9,6 @@ import java.util.UUID;
 public interface VerificationRepository extends JpaRepository<Verification, UUID> {
 
     Optional<Verification> findByDocumentId(UUID documentId);
+
+    Optional<Verification> findFirstByCustomer_IdOrderByCreatedAtDesc(UUID customerId);
 }

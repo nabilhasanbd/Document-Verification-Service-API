@@ -6,8 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="b8a9b059-953b-4585-8bd2-9c819c301420" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/documentverification/entity/Verification.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/documentverification/entity/Verification.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/documentverification/controller/VerificationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/documentverification/controller/VerificationController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/documentverification/repository/VerificationRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/documentverification/repository/VerificationRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/documentverification/service/VerificationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/documentverification/service/VerificationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/documentverification/service/impl/VerificationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/documentverification/service/impl/VerificationServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
