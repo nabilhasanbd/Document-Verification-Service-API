@@ -16,6 +16,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @Service
 @Transactional
 public class CustomerServiceImpl implements CustomerService {
@@ -48,7 +50,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional(readOnly = true)
-    public CustomerResponse getCustomerById(Long id) {
+    public CustomerResponse getCustomerById(UUID id) {
         log.info("Fetching customer with id: {}", id);
 
         Customer customer = customerRepository.findById(id)
