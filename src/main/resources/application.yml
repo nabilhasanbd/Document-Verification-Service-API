@@ -32,7 +32,10 @@ spring:
 aws:
   s3:
     region: us-east-1
-    bucket-name:
+    endpoint: http://localhost:4566
+    access-key: test
+    secret-key: test
+    bucket-name: doc-verification-bucket
 
 resilience4j:
   circuitbreaker:

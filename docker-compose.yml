@@ -1,26 +1,98 @@
-version: '3.8'
+version: "3.8"
 
 services:
   postgres:
-    image: postgres:16
-    container_name: verification-postgres
+    image: postgres:16-alpine
+    container_name: docverify-postgres
     environment:
-      POSTGRES_DB: document_verification_api
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: docverify
+      POSTGRES_USER: docverify
+      POSTGRES_PASSWORD: docverify
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U docverify -d docverify"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   redis:
-    image: redis:7
-    container_name: verification-redis
+    image: redis:7-alpine
+    container_name: docverify-redis
     ports:
       - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # LocalStack emulates AWS S3 locally so the pre-signed URL flow works without real AWS
+  # credentials. Point app.aws.s3-endpoint at real S3 (or remove it) for production.
+  localstack:
+    image: localstack/localstack:3
+    container_name: docverify-localstack
+    environment:
+      SERVICES: s3
+      DEFAULT_REGION: us-east-1
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
+    ports:
+      - "4566:4566"
     volumes:
-      - redis_data:/data
+      - localstack-data:/var/lib/localstack
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4566/_localstack/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # One-shot job that creates the S3 bucket in LocalStack on startup.
+  localstack-init:
+    image: amazon/aws-cli:2.15.0
+    depends_on:
+      localstack:
+        condition: service_healthy
+    environment:
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
+      AWS_DEFAULT_REGION: us-east-1
+    entrypoint: >
+      sh -c "aws --endpoint-url=http://localstack:4566 s3 mb s3://doc-verification-bucket || true"
+
+  # --- Commented out while developing locally ---
+  # Uncomment this block when you want Docker to build and run the app itself
+  # instead of running it natively on your host machine.
+  #
+  # app:
+  #   build: .
+  #   container_name: docverify-app
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #     redis:
+  #       condition: service_healthy
+  #     localstack:
+  #       condition: service_healthy
+  #   environment:
+  #     DB_HOST: postgres
+  #     DB_PORT: 5432
+  #     DB_NAME: docverify
+  #     DB_USER: docverify
+  #     DB_PASSWORD: docverify
+  #     REDIS_HOST: redis
+  #     REDIS_PORT: 6379
+  #     AWS_REGION: us-east-1
+  #     AWS_ACCESS_KEY_ID: test
+  #     AWS_SECRET_ACCESS_KEY: test
+  #     S3_BUCKET: doc-verification-bucket
+  #     S3_ENDPOINT: http://localstack:4566
+  #     EXTERNAL_VERIFICATION_BASE_URL: http://localhost:8080
+  #   ports:
+  #     - "8080:8080"
 
 volumes:
-  postgres_data:
-  redis_data:
+  postgres-data:
+  localstack-data:
