@@ -10,6 +10,8 @@ public interface S3Service {
 
     String generatePresignedUploadUrl(String objectKey);
 
+    String generatePresignedDownloadUrl(String objectKey);
+
     long getPresignedUrlExpirationSeconds();
 
     boolean objectExists(String objectKey);

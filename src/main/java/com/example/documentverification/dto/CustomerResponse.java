@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -22,4 +23,5 @@ public class CustomerResponse {
     private String phone;
     private Instant createdAt;
     private Instant updatedAt;
+    private List<DocumentResponse> documents;
 }

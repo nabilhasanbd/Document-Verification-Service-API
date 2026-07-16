@@ -69,6 +69,7 @@ public class CustomerServiceImpl implements CustomerService {
         log.info("Fetching customer list - page: {}, size: {}", pageable.getPageNumber(), pageable.getPageSize());
 
         Page<Customer> customerPage = customerRepository.findAll(pageable);
+        System.err.println("Customer page: " + customerPage.getContent());
         Page<CustomerResponse> responsePage = customerPage.map(customerMapper::toResponse);
 
         log.info("Customer list fetched - total elements: {}", customerPage.getTotalElements());

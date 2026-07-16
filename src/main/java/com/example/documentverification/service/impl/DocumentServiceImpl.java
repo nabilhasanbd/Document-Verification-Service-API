@@ -12,6 +12,7 @@ import com.example.documentverification.repository.CustomerRepository;
 import com.example.documentverification.repository.DocumentRepository;
 import com.example.documentverification.service.DocumentService;
 import com.example.documentverification.service.S3Service;
+import com.example.documentverification.service.VerificationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -32,13 +33,16 @@ public class DocumentServiceImpl implements DocumentService {
     private final CustomerRepository customerRepository;
     private final DocumentRepository documentRepository;
     private final S3Service s3Service;
+    private final VerificationService verificationService;
 
     public DocumentServiceImpl(CustomerRepository customerRepository,
                                DocumentRepository documentRepository,
-                               S3Service s3Service) {
+                               S3Service s3Service,
+                               VerificationService verificationService) {
         this.customerRepository = customerRepository;
         this.documentRepository = documentRepository;
         this.s3Service = s3Service;
+        this.verificationService = verificationService;
     }
 
     @Override
@@ -81,6 +85,7 @@ public class DocumentServiceImpl implements DocumentService {
                 .uploadedAt(Instant.now())
                 .build();
         Document saved = documentRepository.save(document);
+        verificationService.initVerification(customerId, saved);
 
         log.info("Upload confirmed for customer: {}, document: {}", customerId, saved.getId());
         return Optional.of(new ConfirmUploadResponse(
