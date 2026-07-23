@@ -6,16 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="b8a9b059-953b-4585-8bd2-9c819c301420" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/documentverification/config/RedisConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/documentverification/config/RedisConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/documentverification/dto/CustomerResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/documentverification/dto/CustomerResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/documentverification/dto/VerificationStatusResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/documentverification/dto/VerificationStatusResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/documentverification/mapper/CustomerMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/documentverification/mapper/CustomerMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/documentverification/service/S3Service.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/documentverification/service/S3Service.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/documentverification/service/VerificationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/documentverification/service/VerificationService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/documentverification/service/impl/CustomerServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/documentverification/service/impl/CustomerServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/documentverification/service/impl/DocumentServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/documentverification/service/impl/DocumentServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/documentverification/service/impl/S3ServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/documentverification/service/impl/S3ServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/documentverification/service/impl/VerificationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/documentverification/service/impl/VerificationServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,7 +34,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "D:/projects/Newrozz/Document-Verification-Service-API",
+    "last_opened_file_path": "D:/My learning/spring boot/spring-boot-apps/country",
     "settings.editor.selected.configurable": "preferences.lookFeel"
   }
 }]]></component>
